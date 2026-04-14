@@ -1,0 +1,26 @@
+spring:
+  # 解除 Spring Boot 默认的 1MB 文件上传限制
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 100MB
+
+  ai:
+    # Ollama 大模型配置
+    ollama:
+      base-url: http://localhost:11434
+      chat:
+        options:
+          model: qwen2.5:latest
+          temperature: 0.7
+      embedding:
+        options:
+          model: nomic-embed-text:latest
+
+    # 统一使用原生 URI 配置 Redis 向量库，避免 DNS 冲突
+    vectorstore:
+      redis:
+        uri: redis://localhost:6379
+        index: company-knowledge-index
+        prefix: "doc:"
+        initialize-schema: true
