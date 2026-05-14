@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>AI 知识库流式对话测试</title>
+</head>
+<body>
+<h2>AI 知识库对话测试</h2>
+<div id="chat-box" style="width: 600px; height: 300px; border: 1px solid #ccc; padding: 10px; overflow-y: auto; background-color: #f9f9f9; line-height: 1.6;">
+    <!-- AI 的回答会在这里像打字机一样出现 -->
+</div>
+
+<script>
+    const chatBox = document.getElementById('chat-box');
+
+    // 使用 EventSource 接收 SSE 流
+    const eventSource = new EventSource('http://localhost:8083/api/chat/streamAli?message=写一首关于Java程序员的打油诗');
+
+    // 监听消息事件
+    eventSource.onmessage = function(event) {
+        // event.data 就是我们后端 ServerSentEvent 包装发过来的文字
+        const text = event.data;
+        // 将文字追加到屏幕上，把换行符替换为 HTML 的 <br>
+        chatBox.innerHTML += text.replace(/\n/g, '<br>');
+    };
+
+    // 监听出错或结束事件
+    eventSource.onerror = function(event) {
+        console.log("连接结束或发生错误", event);
+        eventSource.close(); // 结束流
+    };
+</script>
+</body>
+</html>
